@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import com.example.quickmemo.R
+import com.example.quickmemo.activity.room.MemoRoomDatabase
 import com.example.quickmemo.databinding.ActivityMainBinding
 import com.google.android.material.snackbar.Snackbar
 
@@ -23,5 +24,11 @@ class MainActivity : AppCompatActivity() {
                     .setAction("OK", null)
                     .show()
             }
+
+        val memoDAO = MemoRoomDatabase.getInstance(this).getMemoDAO()
+    }
+
+    private fun initList() {
+        
     }
 }
