@@ -1,10 +1,12 @@
 package com.example.quickmemo.activity.activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.widget.Toast
 import com.example.quickmemo.R
 import com.example.quickmemo.activity.room.MemoRoomDatabase
 import com.example.quickmemo.databinding.ActivityMainBinding
@@ -20,15 +22,14 @@ class MainActivity : AppCompatActivity() {
 
         binding.fab
             .setOnClickListener {
-                Snackbar.make(it, "Test", Snackbar.LENGTH_SHORT)
-                    .setAction("OK", null)
-                    .show()
+                Toast.makeText(this, "New Memo", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, MemoActivity::class.java))
             }
 
-        val memoDAO = MemoRoomDatabase.getInstance(this).getMemoDAO()
+//        val memoDAO = MemoRoomDatabase.getInstance(this).getMemoDAO()
     }
 
     private fun initList() {
-        
+
     }
 }
