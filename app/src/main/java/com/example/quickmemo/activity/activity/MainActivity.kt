@@ -25,8 +25,10 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "New Memo", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this, MemoActivity::class.java))
             }
+//         val memoDAO = MemoRoomDatabase.getInstance(this).getMemoDAO()
 
-//        val memoDAO = MemoRoomDatabase.getInstance(this).getMemoDAO()
+
+
     }
 
     private fun initList() {
