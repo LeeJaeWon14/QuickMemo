@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activity.activity.MemoActivity"
-    android:padding = "10dp"
-    android:background="@color/gray">
-
-    <EditText
-        android:id="@+id/textArea_information"
+<layout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/memo_background"
-        android:gravity="top|start"
-        android:inputType="textMultiLine"
-        android:overScrollMode="always"
-        android:scrollbarStyle="insideInset"
-        android:scrollbars="vertical"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:scrollHorizontally="false"
-        android:padding = "10dp"/>
-</LinearLayout>
+        tools:context=".activity.activity.MemoActivity"
+        android:padding = "10dp"
+        android:background="@color/gray">
+
+        <EditText
+            android:id="@+id/textArea_information"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/memo_background"
+            android:gravity="top|start"
+            android:inputType="textMultiLine"
+            android:overScrollMode="always"
+            android:scrollbarStyle="insideInset"
+            android:scrollbars="vertical"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:scrollHorizontally="false"
+            android:padding = "10dp"/>
+    </LinearLayout>
+</layout>
