@@ -23,6 +23,9 @@ class MemoActivity : AppCompatActivity() {
 //
 //        })
 
+        actionBar?.hide()
+        setSupportActionBar(binding.tbMemo)
+
         binding.textAreaInformation.addTextChangedListener {
             viewModel.memoText = it.toString()
             Logger.e("LiveData Save >> ${viewModel.memoText}")
