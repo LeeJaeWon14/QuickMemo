@@ -1,6 +1,8 @@
 package com.example.quickmemo.activity.adapter
 
 import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +13,9 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quickmemo.R
+import com.example.quickmemo.activity.activity.MemoActivity
 import com.example.quickmemo.activity.room.MemoEntity
+import com.example.quickmemo.activity.util.Logger
 import com.example.quickmemo.activity.util.MyDateUtil
 import kotlin.random.Random
 
@@ -33,6 +37,9 @@ class MemoListAdapter(private val entityList: List<MemoEntity>) : RecyclerView.A
     }
 
     override fun onBindViewHolder(holder: MemoListHolder, position: Int) {
+        if(memoList.size <= 1) {
+            return
+        }
         memoList.let {
             for(entity in it) {
                 // CardView
@@ -44,6 +51,12 @@ class MemoListAdapter(private val entityList: List<MemoEntity>) : RecyclerView.A
                         Toast.makeText(context, "Yet", Toast.LENGTH_SHORT).show()
                         memoList.removeAt(position)
                         notifyDataSetChanged()
+                    }
+                    card.setOnClickListener {
+                        Logger.i("card Click !!")
+                        val bundle = Bundle()
+                        bundle.putSerializable("entity", entity)
+                        context.startActivity(Intent(context, MemoActivity::class.java).putExtra("entityBundle", bundle))
                     }
                 }
             }

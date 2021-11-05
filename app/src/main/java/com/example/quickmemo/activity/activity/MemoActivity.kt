@@ -28,6 +28,11 @@ class MemoActivity : AppCompatActivity() {
         actionBar?.hide()
         setSupportActionBar(binding.tbMemo)
 
+        intent.getBundleExtra("entityBundle")?.let {
+            val entity = it.getSerializable("entity") as MemoEntity
+            binding.textAreaInformation.setText(entity.memo)
+        }
+
         when(intent.action) {
             Intent.ACTION_SEND -> {
                 if ("text/plain" == intent.type) {
