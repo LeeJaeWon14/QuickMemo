@@ -1,24 +1,19 @@
 package com.example.quickmemo.activity.activity
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.quickmemo.R
 import com.example.quickmemo.activity.adapter.MemoPagerAdatper
-import com.example.quickmemo.activity.room.MemoRoomDatabase
-import com.example.quickmemo.activity.util.Logger
 import com.example.quickmemo.databinding.ActivityMainBinding
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
+    private val tabTitle = arrayOf("메모", "휴지통")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -26,32 +21,34 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         actionBar?.hide()
 
-        val tabTitle = arrayOf("메모", "휴지통")
+
         setSupportActionBar(binding.toolbar)
-        binding.toolbar.title = tabTitle[0]
-        binding.toolbar.setTitleTextColor(getColor(R.color.white))
+        bindingInit()
+    }
 
-        binding.fab.setOnClickListener {
-            Toast.makeText(this, "New Memo", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, MemoActivity::class.java))
+    private fun bindingInit() {
+        binding.apply {
+            toolbar.title = tabTitle[0]
+            toolbar.setTitleTextColor(getColor(R.color.white))
+            fab.setOnClickListener {
+                Toast.makeText(this@MainActivity, "New Memo", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this@MainActivity, MemoActivity::class.java))
+            }
+            viewPager.adapter = MemoPagerAdatper(this@MainActivity)
+            TabLayoutMediator(binding.tlTab, binding.viewPager, object : TabLayoutMediator.TabConfigurationStrategy {
+                override fun onConfigureTab(tab: TabLayout.Tab, position: Int) {
+
+                }
+            }).attach()
+            tlTab.setSelectedTabIndicatorColor(getColor(R.color.white))
+            tlTab.setBackgroundColor(getColor(R.color.purple_700))
+            viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    binding.toolbar.title = tabTitle[position]
+                }
+            })
         }
-//         val memoDAO = MemoRoomDatabase.getInstance(this).getMemoDAO()
-
-
-        binding.viewPager.adapter = MemoPagerAdatper(this)
-        TabLayoutMediator(binding.tlTab, binding.viewPager, object : TabLayoutMediator.TabConfigurationStrategy {
-            override fun onConfigureTab(tab: TabLayout.Tab, position: Int) {
-
-            }
-        }).attach()
-        binding.tlTab.setSelectedTabIndicatorColor(getColor(R.color.white))
-        binding.tlTab.setBackgroundColor(getColor(R.color.purple_700))
-        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                binding.toolbar.title = tabTitle[position]
-            }
-        })
     }
 
     private var time : Long = 0

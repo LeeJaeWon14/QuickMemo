@@ -10,11 +10,12 @@ object MyDateUtil {
     const val HANGUEL = "yyyy년 MM월 dd일"
     const val COLONE = "yyyy:MM:dd"
 
-    fun getDateHyphen(format: String) : String {
+    fun getDate(format: String) : String {
         return when(format) {
             HYPHEN -> SimpleDateFormat(HYPHEN, Locale.KOREA).format(date)
             SLASH -> SimpleDateFormat(SLASH, Locale.KOREA).format(date)
-            HANGUEL -> SimpleDateFormat(COLONE, Locale.KOREA).format(date)
+            HANGUEL -> SimpleDateFormat(HANGUEL, Locale.KOREA).format(date)
+            COLONE -> SimpleDateFormat(COLONE, Locale.KOREA).format(date)
             else -> SimpleDateFormat(format, Locale.KOREA).format(date)
         }
     }

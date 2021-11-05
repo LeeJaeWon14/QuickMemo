@@ -11,12 +11,14 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quickmemo.R
-import java.text.SimpleDateFormat
-import java.util.*
+import com.example.quickmemo.activity.room.MemoEntity
+import com.example.quickmemo.activity.util.MyDateUtil
 import kotlin.random.Random
 
-class MemoListAdapter(private val size : Int) : RecyclerView.Adapter<MemoListAdapter.MemoListHolder>() {
+class MemoListAdapter(private val entityList: List<MemoEntity>) : RecyclerView.Adapter<MemoListAdapter.MemoListHolder>() {
     private lateinit var context : Context
+    private val memoList = entityList.toMutableList()
+    private var size : Int = memoList.size
     class MemoListHolder(view : View) : RecyclerView.ViewHolder(view) {
         val date : TextView = view.findViewById(R.id.tv_lastDate)
         val memo : TextView = view.findViewById(R.id.tv_memo)
@@ -31,13 +33,19 @@ class MemoListAdapter(private val size : Int) : RecyclerView.Adapter<MemoListAda
     }
 
     override fun onBindViewHolder(holder: MemoListHolder, position: Int) {
-        // CardView
-        holder.apply {
-            card.setBackgroundColor(ContextCompat.getColor(context, randomColor()))
-            date.text = SimpleDateFormat("yyyy-MM-dd").format(Date())
-            memo.text = "Test"
-            remove.setOnClickListener {
-                Toast.makeText(context, "Yet", Toast.LENGTH_SHORT).show()
+        memoList.let {
+            for(entity in it) {
+                // CardView
+                holder.apply {
+                    card.setBackgroundColor(ContextCompat.getColor(context, randomColor()))
+                    date.text = MyDateUtil.getDate(MyDateUtil.HANGUEL) // ; entity.last_date
+                    memo.text = entity.memo
+                    remove.setOnClickListener {
+                        Toast.makeText(context, "Yet", Toast.LENGTH_SHORT).show()
+                        memoList.removeAt(position)
+                        notifyDataSetChanged()
+                    }
+                }
             }
         }
     }

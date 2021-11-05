@@ -7,7 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.quickmemo.activity.adapter.MemoListAdapter
+import com.example.quickmemo.activity.room.MemoRoomDatabase
 import com.example.quickmemo.databinding.FragmentMemoListBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MemoListFragment : Fragment() {
     private var _binding : FragmentMemoListBinding? = null
@@ -34,8 +39,14 @@ class MemoListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.rvMemoList.adapter = MemoListAdapter(5)
-        binding.rvMemoList.layoutManager = LinearLayoutManager(requireActivity())
+        CoroutineScope(Dispatchers.IO).launch {
+            val memoList = MemoRoomDatabase.getInstance(requireContext()).getMemoDAO()
+                .getMemoList()
+            withContext(Dispatchers.Main) {
+                binding.rvMemoList.adapter = MemoListAdapter(memoList)
+                binding.rvMemoList.layoutManager = LinearLayoutManager(requireActivity())
+            }
+        }
     }
 
     override fun onDestroyView() {
