@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
+import com.example.quickmemo.R
 import com.example.quickmemo.activity.room.MemoEntity
 import com.example.quickmemo.activity.room.MemoRoomDatabase
 import com.example.quickmemo.activity.util.Logger
@@ -72,7 +73,7 @@ class MemoActivity : AppCompatActivity() {
 
             textAreaInformation.setOnScrollChangeListener { view: View, i: Int, i1: Int, i2: Int, i3: Int ->
                 if(binding.textAreaInformation.lineCount == binding.textAreaInformation.maxLines) {
-                    Toast.makeText(this@MemoActivity, "최대 라인 수에 도달했습니다.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MemoActivity, getString(R.string.str_text_line_max), Toast.LENGTH_SHORT).show()
                 }
             }
 

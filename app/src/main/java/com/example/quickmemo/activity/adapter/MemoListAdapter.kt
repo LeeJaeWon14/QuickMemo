@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
@@ -41,7 +42,33 @@ class MemoListAdapter(private val entityList: List<MemoEntity>) : RecyclerView.A
         memoList.let {
             holder.apply {
                 val entity = it[position]
-                card.setBackgroundColor(ContextCompat.getColor(context, randomColor()))
+                card.apply {
+                    setBackgroundColor(ContextCompat.getColor(context, randomColor()))
+                    setOnClickListener {
+                        val bundle = Bundle()
+                        bundle.putSerializable("entity", entity)
+                        context.startActivity(Intent(context, MemoActivity::class.java).putExtra("entityBundle", bundle))
+                    }
+                    setOnLongClickListener {
+                        val popup = PopupMenu(context, it)
+                        popup.setOnMenuItemClickListener {
+                            when(it.itemId) {
+                                R.id.menu_memo_share -> {
+                                    Toast.makeText(context, context.getString(R.string.str_memo_share), Toast.LENGTH_SHORT).show()
+                                }
+                                R.id.menu_memo_remove -> {
+                                    Toast.makeText(context, context.getString(R.string.str_memo_remove), Toast.LENGTH_SHORT).show()
+                                }
+                                else -> { return@setOnMenuItemClickListener false }
+                            }
+                            return@setOnMenuItemClickListener true
+                        }
+                        popup.inflate(R.menu.menu_memo_card)
+                        popup.show()
+
+                        true
+                    }
+                }
                 date.text = entity.last_date
                 memo.text = entity.memo
                 Logger.i("entitiy name is ${entity.memo}")
@@ -53,11 +80,6 @@ class MemoListAdapter(private val entityList: List<MemoEntity>) : RecyclerView.A
                         .deleteMemo(entity)
                     size = memoList.size
                     notifyDataSetChanged()
-                }
-                card.setOnClickListener {
-                    val bundle = Bundle()
-                    bundle.putSerializable("entity", entity)
-                    context.startActivity(Intent(context, MemoActivity::class.java).putExtra("entityBundle", bundle))
                 }
             }
         }
