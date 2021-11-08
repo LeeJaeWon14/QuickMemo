@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.quickmemo.R
 import com.example.quickmemo.activity.adapter.MemoPagerAdatper
+import com.example.quickmemo.activity.fragment.MemoListFragment
 import com.example.quickmemo.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -46,9 +47,17 @@ class MainActivity : AppCompatActivity() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
                     binding.toolbar.title = tabTitle[position]
+//                    if(supportFragmentManager.fragments.isNotEmpty()) {
+//                        MemoListFragment.newInstance(position).dataChanged()
+//                    }
                 }
             })
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.viewPager.adapter = MemoPagerAdatper(this@MainActivity)
     }
 
     private var time : Long = 0

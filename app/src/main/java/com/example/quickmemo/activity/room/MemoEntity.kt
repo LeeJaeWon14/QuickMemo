@@ -8,7 +8,7 @@ import java.io.Serializable
 data class MemoEntity(
      var last_date : String = "",
      var memo : String = "",
-     @PrimaryKey(autoGenerate = true) var id : Int = 0
+     @PrimaryKey(autoGenerate = true) var id : Int
 ) : Serializable {
 
 }

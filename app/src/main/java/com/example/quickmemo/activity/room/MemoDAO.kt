@@ -6,6 +6,9 @@ import androidx.room.*
 interface MemoDAO {
     @Query("SELECT * FROM MemoEntity")
     fun getMemoList() : List<MemoEntity>
+//
+//    @Query("SELECT * FROM MemoEntity id=:id")
+//    fun checkEntity() : Boolean
 
     @Insert
     fun insertMemo(entity: MemoEntity)

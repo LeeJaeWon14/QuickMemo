@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.quickmemo.R
 import com.example.quickmemo.activity.activity.MemoActivity
 import com.example.quickmemo.activity.room.MemoEntity
+import com.example.quickmemo.activity.room.MemoRoomDatabase
 import com.example.quickmemo.activity.util.Logger
 import com.example.quickmemo.activity.util.MyDateUtil
 import kotlin.random.Random
@@ -37,27 +38,26 @@ class MemoListAdapter(private val entityList: List<MemoEntity>) : RecyclerView.A
     }
 
     override fun onBindViewHolder(holder: MemoListHolder, position: Int) {
-        if(memoList.size <= 1) {
-            return
-        }
         memoList.let {
-            for(entity in it) {
-                // CardView
-                holder.apply {
-                    card.setBackgroundColor(ContextCompat.getColor(context, randomColor()))
-                    date.text = MyDateUtil.getDate(MyDateUtil.HANGUEL) // ; entity.last_date
-                    memo.text = entity.memo
-                    remove.setOnClickListener {
-                        Toast.makeText(context, "Yet", Toast.LENGTH_SHORT).show()
-                        memoList.removeAt(position)
-                        notifyDataSetChanged()
-                    }
-                    card.setOnClickListener {
-                        Logger.i("card Click !!")
-                        val bundle = Bundle()
-                        bundle.putSerializable("entity", entity)
-                        context.startActivity(Intent(context, MemoActivity::class.java).putExtra("entityBundle", bundle))
-                    }
+            holder.apply {
+                val entity = it[position]
+                card.setBackgroundColor(ContextCompat.getColor(context, randomColor()))
+                date.text = entity.last_date
+                memo.text = entity.memo
+                Logger.i("entitiy name is ${entity.memo}")
+                remove.setOnClickListener {
+                    if(memoList.size == 1) return@setOnClickListener
+                    Toast.makeText(context, "Yet", Toast.LENGTH_SHORT).show()
+                    memoList.removeAt(position)
+                    MemoRoomDatabase.getInstance(context).getMemoDAO()
+                        .deleteMemo(entity)
+                    size = memoList.size
+                    notifyDataSetChanged()
+                }
+                card.setOnClickListener {
+                    val bundle = Bundle()
+                    bundle.putSerializable("entity", entity)
+                    context.startActivity(Intent(context, MemoActivity::class.java).putExtra("entityBundle", bundle))
                 }
             }
         }

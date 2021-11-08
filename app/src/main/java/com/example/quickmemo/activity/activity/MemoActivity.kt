@@ -45,9 +45,6 @@ class MemoActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        Toast.makeText(this, "Save on pause", Toast.LENGTH_SHORT).show()
-        save()
-//        viewModel.memoText.removeObservers(this)
     }
 
     private fun init() {
@@ -72,7 +69,6 @@ class MemoActivity : AppCompatActivity() {
             }
 
             fabBack.setOnClickListener {
-                save()
                 onBackPressed()
             }
         }
@@ -83,8 +79,17 @@ class MemoActivity : AppCompatActivity() {
             MemoRoomDatabase.getInstance(this@MemoActivity).getMemoDAO()
                 .insertMemo(MemoEntity(
                     MyDateUtil.getDate(MyDateUtil.HANGUEL),
-                    viewModel.memoText
+                    viewModel.memoText,
+                    0
                 ))
+        }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if(viewModel.memoText.isNotEmpty()) {
+            save()
+            Toast.makeText(this, "Save on phone", Toast.LENGTH_SHORT).show()
         }
     }
 }
