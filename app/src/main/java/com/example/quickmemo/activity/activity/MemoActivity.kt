@@ -3,6 +3,7 @@ package com.example.quickmemo.activity.activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
@@ -21,6 +22,7 @@ class MemoActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMemoBinding
     private lateinit var viewModel : MemoViewModel
     private var sharedString : String? = null
+    private var entity : MemoEntity? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         init()
@@ -29,8 +31,8 @@ class MemoActivity : AppCompatActivity() {
         setSupportActionBar(binding.tbMemo)
 
         intent.getBundleExtra("entityBundle")?.let {
-            val entity = it.getSerializable("entity") as MemoEntity
-            binding.textAreaInformation.setText(entity.memo)
+            entity = it.getSerializable("entity") as MemoEntity
+            binding.textAreaInformation.setText(entity?.memo)
         }
 
         when(intent.action) {
@@ -41,6 +43,10 @@ class MemoActivity : AppCompatActivity() {
                 }
             }
         }
+
+        //keyboard up
+        val manager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        manager.showSoftInput(binding.textAreaInformation, InputMethodManager.SHOW_IMPLICIT)
     }
 
     override fun onPause() {
@@ -62,6 +68,8 @@ class MemoActivity : AppCompatActivity() {
                 Logger.e("LiveData Save >> ${viewModel.memoText}")
             }
 
+            textAreaInformation.requestFocus()
+
             textAreaInformation.setOnScrollChangeListener { view: View, i: Int, i1: Int, i2: Int, i3: Int ->
                 if(binding.textAreaInformation.lineCount == binding.textAreaInformation.maxLines) {
                     Toast.makeText(this@MemoActivity, "최대 라인 수에 도달했습니다.", Toast.LENGTH_SHORT).show()
@@ -70,6 +78,9 @@ class MemoActivity : AppCompatActivity() {
 
             fabBack.setOnClickListener {
                 onBackPressed()
+//                //keyboard down
+//                val manager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+//                manager.hideSoftInputFromWindow(currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
             }
         }
     }
@@ -85,9 +96,11 @@ class MemoActivity : AppCompatActivity() {
         }
     }
 
+    private fun existPrevMemo(text: String) : Boolean = entity?.memo == text
+
     override fun onBackPressed() {
         super.onBackPressed()
-        if(viewModel.memoText.isNotEmpty()) {
+        if(viewModel.memoText.isNotEmpty() && !existPrevMemo(binding.textAreaInformation.text.toString())) {
             save()
             Toast.makeText(this, "Save on phone", Toast.LENGTH_SHORT).show()
         }
