@@ -37,5 +37,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:src = "@drawable/outline_add_24"
-        android:contentDescription="Add" />
+        android:contentDescription="Add"
+        android:backgroundTint="@color/purple_500" />
 </RelativeLayout>

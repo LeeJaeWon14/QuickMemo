@@ -35,5 +35,6 @@
         android:layout_margin="20dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:src = "@drawable/outline_clear_24" />
+        android:src = "@drawable/outline_clear_24"
+        android:backgroundTint="@color/purple_500"/>
 </RelativeLayout>

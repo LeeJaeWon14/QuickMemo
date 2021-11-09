@@ -47,9 +47,6 @@ class MainActivity : AppCompatActivity() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
                     binding.toolbar.title = tabTitle[position]
-//                    if(supportFragmentManager.fragments.isNotEmpty()) {
-//                        MemoListFragment.newInstance(position).dataChanged()
-//                    }
                 }
             })
         }

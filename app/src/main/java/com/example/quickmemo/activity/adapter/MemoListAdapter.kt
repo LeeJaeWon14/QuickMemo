@@ -57,7 +57,7 @@ class MemoListAdapter(private val entityList: List<MemoEntity>) : RecyclerView.A
                                     Toast.makeText(context, context.getString(R.string.str_memo_share), Toast.LENGTH_SHORT).show()
                                 }
                                 R.id.menu_memo_remove -> {
-                                    Toast.makeText(context, context.getString(R.string.str_memo_remove), Toast.LENGTH_SHORT).show()
+                                    removeMemo(entity, position)
                                 }
                                 else -> { return@setOnMenuItemClickListener false }
                             }
@@ -73,13 +73,7 @@ class MemoListAdapter(private val entityList: List<MemoEntity>) : RecyclerView.A
                 memo.text = entity.memo
                 Logger.i("entitiy name is ${entity.memo}")
                 remove.setOnClickListener {
-                    if(memoList.size == 1) return@setOnClickListener
-                    Toast.makeText(context, "Yet", Toast.LENGTH_SHORT).show()
-                    memoList.removeAt(position)
-                    MemoRoomDatabase.getInstance(context).getMemoDAO()
-                        .deleteMemo(entity)
-                    size = memoList.size
-                    notifyDataSetChanged()
+                    removeMemo(entity, position)
                 }
             }
         }
@@ -96,5 +90,14 @@ class MemoListAdapter(private val entityList: List<MemoEntity>) : RecyclerView.A
             2 -> R.color.purple_200
             else -> 0
         }
+    }
+
+    private fun removeMemo(entity: MemoEntity, position: Int) {
+//        if(memoList.size == 1) return
+        memoList.removeAt(position)
+        MemoRoomDatabase.getInstance(context).getMemoDAO()
+            .deleteMemo(entity)
+        size = memoList.size
+        notifyDataSetChanged()
     }
 }
