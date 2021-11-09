@@ -71,7 +71,6 @@ class MemoListAdapter(private val entityList: List<MemoEntity>) : RecyclerView.A
                 }
                 date.text = entity.last_date
                 memo.text = entity.memo
-                Logger.i("entitiy name is ${entity.memo}")
                 remove.setOnClickListener {
                     removeMemo(entity, position)
                 }

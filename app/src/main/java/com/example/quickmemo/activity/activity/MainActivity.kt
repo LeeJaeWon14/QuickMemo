@@ -32,7 +32,6 @@ class MainActivity : AppCompatActivity() {
             toolbar.title = tabTitle[0]
             toolbar.setTitleTextColor(getColor(R.color.white))
             fab.setOnClickListener {
-                Toast.makeText(this@MainActivity, "New Memo", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this@MainActivity, MemoActivity::class.java))
             }
             viewPager.adapter = MemoPagerAdatper(this@MainActivity)

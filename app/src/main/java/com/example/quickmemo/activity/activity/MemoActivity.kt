@@ -66,7 +66,6 @@ class MemoActivity : AppCompatActivity() {
         binding.apply {
             textAreaInformation.addTextChangedListener {
                 viewModel.memoText = it.toString()
-                Logger.e("LiveData Save >> ${viewModel.memoText}")
             }
 
             textAreaInformation.requestFocus()
@@ -79,9 +78,6 @@ class MemoActivity : AppCompatActivity() {
 
             fabBack.setOnClickListener {
                 onBackPressed()
-//                //keyboard down
-//                val manager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-//                manager.hideSoftInputFromWindow(currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
             }
         }
     }
@@ -97,13 +93,23 @@ class MemoActivity : AppCompatActivity() {
         }
     }
 
+    private fun update(entity: MemoEntity) {
+        CoroutineScope(Dispatchers.IO).launch {
+            MemoRoomDatabase.getInstance(this@MemoActivity).getMemoDAO()
+                .updateMemo(entity)
+        }
+    }
+
     private fun existPrevMemo(text: String) : Boolean = entity?.memo == text
 
     override fun onBackPressed() {
         super.onBackPressed()
-        if(viewModel.memoText.isNotEmpty() && !existPrevMemo(binding.textAreaInformation.text.toString())) {
+        if (viewModel.memoText.isNotEmpty() && !existPrevMemo(binding.textAreaInformation.text.toString())) {
             save()
             Toast.makeText(this, "Save on phone", Toast.LENGTH_SHORT).show()
+        }
+        else {
+            entity?.let { update(it) }
         }
     }
 }
