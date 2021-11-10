@@ -42,14 +42,22 @@ class MemoListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         CoroutineScope(Dispatchers.IO).launch {
-            val memoList = MemoRoomDatabase.getInstance(requireContext()).getMemoDAO()
-                .getMemoList()
+            val memoList = when(arguments?.getInt("page")) {
+                0 -> {
+                    MemoRoomDatabase.getInstance(requireContext()).getMemoDAO()
+                        .getMemoList()
+                }
+                1 -> {
+                    MemoRoomDatabase.getInstance(requireContext()).getBasketDAO()
+                        .getBasketList()
+                }
+                else -> { null }
+            }
             withContext(Dispatchers.Main) {
                 binding.rvMemoList.apply {
-                    adapter = MemoListAdapter(memoList)
+                    adapter = MemoListAdapter(memoList!!)
                     layoutManager = LinearLayoutManager(requireActivity())
-                    adapter?.registerAdapterDataObserver(object :
-                        RecyclerView.AdapterDataObserver() {
+                    adapter?.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
                         override fun onChanged() {
                             if (binding.rvMemoList.adapter?.itemCount == 0) {
                                 Toast.makeText(requireContext(), "목록이 비었습니다.", Toast.LENGTH_SHORT).show()

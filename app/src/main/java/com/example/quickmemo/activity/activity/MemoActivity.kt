@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import com.example.quickmemo.R
-import com.example.quickmemo.activity.room.MemoEntity
+import com.example.quickmemo.activity.room.entity.MemoEntity
 import com.example.quickmemo.activity.room.MemoRoomDatabase
 import com.example.quickmemo.activity.util.Logger
 import com.example.quickmemo.activity.util.MyDateUtil
@@ -85,7 +85,8 @@ class MemoActivity : AppCompatActivity() {
     private fun save() {
         CoroutineScope(Dispatchers.IO).launch {
             MemoRoomDatabase.getInstance(this@MemoActivity).getMemoDAO()
-                .insertMemo(MemoEntity(
+                .insertMemo(
+                    MemoEntity(
                     MyDateUtil.getDate(MyDateUtil.HANGUEL),
                     viewModel.memoText,
                     0

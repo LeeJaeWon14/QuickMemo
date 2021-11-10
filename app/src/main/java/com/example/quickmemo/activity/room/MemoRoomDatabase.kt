@@ -4,10 +4,16 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import com.example.quickmemo.activity.room.dao.BasketDAO
+import com.example.quickmemo.activity.room.dao.MemoDAO
+import com.example.quickmemo.activity.room.entity.BasketEntity
+import com.example.quickmemo.activity.room.entity.MemoEntity
 
-@Database(entities = [MemoEntity::class], version = 1, exportSchema = true)
+@Database(entities = [MemoEntity::class, BasketEntity::class], version = 2, exportSchema = true)
 abstract class MemoRoomDatabase : RoomDatabase() {
     abstract fun getMemoDAO() : MemoDAO
+    abstract fun getBasketDAO() : BasketDAO
 
     companion object {
         private var instance : MemoRoomDatabase? = null
@@ -16,6 +22,7 @@ abstract class MemoRoomDatabase : RoomDatabase() {
             if(instance == null) {
                 instance = Room.databaseBuilder(context.applicationContext, MemoRoomDatabase::class.java, "memoRoom.db")
                     .allowMainThreadQueries()
+                    .fallbackToDestructiveMigration()
                     .build()
             }
             return instance!!

@@ -1,14 +1,12 @@
-package com.example.quickmemo.activity.room
+package com.example.quickmemo.activity.room.dao
 
 import androidx.room.*
+import com.example.quickmemo.activity.room.entity.MemoEntity
 
 @Dao
 interface MemoDAO {
     @Query("SELECT * FROM MemoEntity")
     fun getMemoList() : List<MemoEntity>
-//
-//    @Query("SELECT * FROM MemoEntity id=:id")
-//    fun checkEntity() : Boolean
 
     @Insert
     fun insertMemo(entity: MemoEntity)

@@ -1,4 +1,4 @@
-package com.example.quickmemo.activity.room
+package com.example.quickmemo.activity.room.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

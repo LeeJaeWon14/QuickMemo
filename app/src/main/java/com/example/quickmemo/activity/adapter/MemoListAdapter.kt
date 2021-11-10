@@ -15,13 +15,12 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quickmemo.R
 import com.example.quickmemo.activity.activity.MemoActivity
-import com.example.quickmemo.activity.room.MemoEntity
 import com.example.quickmemo.activity.room.MemoRoomDatabase
-import com.example.quickmemo.activity.util.Logger
-import com.example.quickmemo.activity.util.MyDateUtil
+import com.example.quickmemo.activity.room.entity.BasketEntity
+import com.example.quickmemo.activity.room.entity.MemoEntity
 import kotlin.random.Random
 
-class MemoListAdapter(private val entityList: List<MemoEntity>) : RecyclerView.Adapter<MemoListAdapter.MemoListHolder>() {
+class MemoListAdapter(entityList: List<MemoEntity>) : RecyclerView.Adapter<MemoListAdapter.MemoListHolder>() {
     private lateinit var context : Context
     private val memoList = entityList.toMutableList()
     private var size : Int = memoList.size
@@ -96,6 +95,14 @@ class MemoListAdapter(private val entityList: List<MemoEntity>) : RecyclerView.A
         memoList.removeAt(position)
         MemoRoomDatabase.getInstance(context).getMemoDAO()
             .deleteMemo(entity)
+        MemoRoomDatabase.getInstance(context).getBasketDAO()
+            .insertBasket(
+                BasketEntity(
+                    entity.last_date,
+                    entity.memo,
+                    0
+                )
+            )
         size = memoList.size
         notifyDataSetChanged()
     }
