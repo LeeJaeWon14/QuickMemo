@@ -33,7 +33,7 @@
             android:textSize="25dp"
             android:fontFamily="@font/swagger"
             android:textColor="@color/white"
-            android:maxLines="5"
+            android:maxLines="2"
             tools:text="This area is showing be memo" />
         <ImageView
             android:id = "@+id/iv_remove_memo"

@@ -1,6 +1,7 @@
-package com.example.quickmemo.activity.adapter
+package com.example.quickmemo.activity.adapter.recycler
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -20,10 +22,10 @@ import com.example.quickmemo.activity.room.entity.BasketEntity
 import com.example.quickmemo.activity.room.entity.MemoEntity
 import kotlin.random.Random
 
-class MemoListAdapter(entityList: List<MemoEntity>) : RecyclerView.Adapter<MemoListAdapter.MemoListHolder>() {
-    private lateinit var context : Context
-    private val memoList = entityList.toMutableList()
+class BasketListAdapter(private var context : Context) : RecyclerView.Adapter<BasketListAdapter.MemoListHolder>() {
+    private val memoList = MemoRoomDatabase.getInstance(context).getBasketDAO().getBasketList().toMutableList()
     private var size : Int = memoList.size
+
     class MemoListHolder(view : View) : RecyclerView.ViewHolder(view) {
         val date : TextView = view.findViewById(R.id.tv_lastDate)
         val memo : TextView = view.findViewById(R.id.tv_memo)
@@ -42,27 +44,31 @@ class MemoListAdapter(entityList: List<MemoEntity>) : RecyclerView.Adapter<MemoL
             holder.apply {
                 val entity = it[position]
                 card.apply {
-                    setBackgroundColor(ContextCompat.getColor(context, randomColor()))
+//                    setBackgroundColor(ContextCompat.getColor(context, randomColor()))
+                    setBackgroundResource(randomColor())
                     setOnClickListener {
-                        val bundle = Bundle()
-                        bundle.putSerializable("entity", entity)
-                        context.startActivity(Intent(context, MemoActivity::class.java).putExtra("entityBundle", bundle))
+                        val dlg = AlertDialog.Builder(context)
+                        dlg.setMessage(context.getString(R.string.str_restore_message))
+                        dlg.setPositiveButton("복구") { _: DialogInterface, _: Int ->
+                            // restore
+                            restoreMemo(entity, position)
+                        }
+                        dlg.setNegativeButton("취소", null)
+                        dlg.setCancelable(false)
+                        dlg.show()
                     }
                     setOnLongClickListener {
                         val popup = PopupMenu(context, it)
                         popup.setOnMenuItemClickListener {
                             when(it.itemId) {
-                                R.id.menu_memo_share -> {
-                                    Toast.makeText(context, context.getString(R.string.str_memo_share), Toast.LENGTH_SHORT).show()
-                                }
-                                R.id.menu_memo_remove -> {
-                                    removeMemo(entity, position)
+                                R.id.menu_memo_resotre -> {
+                                    restoreMemo(entity, position)
                                 }
                                 else -> { return@setOnMenuItemClickListener false }
                             }
                             return@setOnMenuItemClickListener true
                         }
-                        popup.inflate(R.menu.menu_memo_card)
+                        popup.inflate(R.menu.menu_basket)
                         popup.show()
 
                         true
@@ -83,27 +89,30 @@ class MemoListAdapter(entityList: List<MemoEntity>) : RecyclerView.Adapter<MemoL
 
     private fun randomColor() : Int {
         return when(Random.nextInt(3)) {
-            0 -> R.color.purple_700
-            1 -> R.color.purple_500
-            2 -> R.color.purple_200
+            0 -> R.drawable.selector_card_700
+            1 -> R.drawable.selector_card_500
+            2 -> R.drawable.selector_card_200
             else -> 0
         }
     }
 
-    private fun removeMemo(entity: MemoEntity, position: Int) {
-//        if(memoList.size == 1) return
+    private fun removeMemo(entity: BasketEntity, position: Int) {
         memoList.removeAt(position)
-        MemoRoomDatabase.getInstance(context).getMemoDAO()
-            .deleteMemo(entity)
         MemoRoomDatabase.getInstance(context).getBasketDAO()
-            .insertBasket(
-                BasketEntity(
+            .deleteBasket(entity)
+        size = memoList.size
+        notifyDataSetChanged()
+    }
+
+    private fun restoreMemo(entity: BasketEntity, position: Int) {
+        removeMemo(entity, position)
+        MemoRoomDatabase.getInstance(context).getMemoDAO()
+            .insertMemo(
+                MemoEntity(
                     entity.last_date,
                     entity.memo,
                     0
                 )
             )
-        size = memoList.size
-        notifyDataSetChanged()
     }
 }

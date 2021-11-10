@@ -10,7 +10,7 @@ import com.example.quickmemo.activity.room.dao.MemoDAO
 import com.example.quickmemo.activity.room.entity.BasketEntity
 import com.example.quickmemo.activity.room.entity.MemoEntity
 
-@Database(entities = [MemoEntity::class, BasketEntity::class], version = 2, exportSchema = true)
+@Database(entities = [MemoEntity::class, BasketEntity::class], version = 1, exportSchema = true)
 abstract class MemoRoomDatabase : RoomDatabase() {
     abstract fun getMemoDAO() : MemoDAO
     abstract fun getBasketDAO() : BasketDAO

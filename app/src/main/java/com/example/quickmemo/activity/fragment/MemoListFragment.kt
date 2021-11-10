@@ -8,11 +8,16 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.quickmemo.activity.adapter.MemoListAdapter
+import com.example.quickmemo.activity.adapter.recycler.BasketListAdapter
+import com.example.quickmemo.activity.adapter.recycler.MemoListAdapter
 import com.example.quickmemo.activity.room.MemoRoomDatabase
+import com.example.quickmemo.activity.room.entity.BasketEntity
+import com.example.quickmemo.activity.room.entity.MemoEntity
+import com.example.quickmemo.activity.util.Logger
 import com.example.quickmemo.databinding.FragmentMemoListBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -41,31 +46,32 @@ class MemoListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        CoroutineScope(Dispatchers.IO).launch {
-            val memoList = when(arguments?.getInt("page")) {
-                0 -> {
-                    MemoRoomDatabase.getInstance(requireContext()).getMemoDAO()
-                        .getMemoList()
+        CoroutineScope(Dispatchers.Main).launch {
+            binding.rvMemoList.apply {
+                adapter = when(arguments?.getInt("page")) {
+                    0 -> MemoListAdapter(requireContext())
+                    1 -> BasketListAdapter(requireContext())
+                    else -> { null }
                 }
-                1 -> {
-                    MemoRoomDatabase.getInstance(requireContext()).getBasketDAO()
-                        .getBasketList()
-                }
-                else -> { null }
-            }
-            withContext(Dispatchers.Main) {
-                binding.rvMemoList.apply {
-                    adapter = MemoListAdapter(memoList!!)
-                    layoutManager = LinearLayoutManager(requireActivity())
-                    adapter?.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-                        override fun onChanged() {
-                            if (binding.rvMemoList.adapter?.itemCount == 0) {
-                                Toast.makeText(requireContext(), "목록이 비었습니다.", Toast.LENGTH_SHORT).show()
-                            }
+                layoutManager = LinearLayoutManager(requireContext())
+                adapter?.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+                    override fun onChanged() {
+                        if (binding.rvMemoList.adapter?.itemCount == 0) {
+                            Toast.makeText(requireContext(), "목록이 비었습니다.", Toast.LENGTH_SHORT).show()
                         }
-                    })
-                }
+                    }
+                })
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // replace말고 다른 방법 찾아볼것
+        binding.rvMemoList.adapter = when(arguments?.getInt("page")) {
+            0 -> MemoListAdapter(requireContext())
+            1 -> BasketListAdapter(requireContext())
+            else -> { null }
         }
     }
 

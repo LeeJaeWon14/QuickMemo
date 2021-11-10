@@ -7,7 +7,7 @@ import com.example.quickmemo.activity.room.entity.MemoEntity
 @Dao
 interface BasketDAO {
     @Query("SELECT * FROM BasketEntity")
-    fun getBasketList() : List<MemoEntity>
+    fun getBasketList() : List<BasketEntity>
 
     @Insert
     fun insertBasket(entity: BasketEntity)
