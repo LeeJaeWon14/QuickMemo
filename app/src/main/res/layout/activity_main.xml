@@ -11,8 +11,8 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="@color/purple_700" />
+        android:background="@color/purple_700"
+        app:title="Test"/>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tl_tab"

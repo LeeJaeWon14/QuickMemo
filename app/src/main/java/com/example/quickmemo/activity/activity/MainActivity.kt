@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.quickmemo.R
 import com.example.quickmemo.activity.adapter.MemoPagerAdatper
-import com.example.quickmemo.activity.fragment.MemoListFragment
 import com.example.quickmemo.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -37,7 +36,7 @@ class MainActivity : AppCompatActivity() {
             viewPager.adapter = MemoPagerAdatper(this@MainActivity)
             TabLayoutMediator(binding.tlTab, binding.viewPager, object : TabLayoutMediator.TabConfigurationStrategy {
                 override fun onConfigureTab(tab: TabLayout.Tab, position: Int) {
-
+//                    tab.text = tabTitle[position]
                 }
             }).attach()
             tlTab.setSelectedTabIndicatorColor(getColor(R.color.white))

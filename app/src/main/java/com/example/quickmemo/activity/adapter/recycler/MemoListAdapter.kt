@@ -9,9 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quickmemo.R
 import com.example.quickmemo.activity.activity.MemoActivity
@@ -54,7 +52,11 @@ class MemoListAdapter(private var context : Context) : RecyclerView.Adapter<Memo
                         popup.setOnMenuItemClickListener {
                             when(it.itemId) {
                                 R.id.menu_memo_share -> {
-                                    Toast.makeText(context, context.getString(R.string.str_memo_share), Toast.LENGTH_SHORT).show()
+//                                    Toast.makeText(context, context.getString(R.string.str_memo_share), Toast.LENGTH_SHORT).show()
+                                    val intent = Intent(Intent.ACTION_SEND)
+                                    intent.type = "text/plain"
+                                    intent.putExtra(Intent.EXTRA_TEXT, "${entity.memo} \r\n ---------- \r\nby. ${context.getString(R.string.app_name)}")
+                                    context.startActivity(Intent.createChooser(intent, "Shared memo"))
                                 }
                                 R.id.menu_memo_remove -> {
                                     removeMemo(entity, position)

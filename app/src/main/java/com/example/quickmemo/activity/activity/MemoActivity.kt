@@ -9,8 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import com.example.quickmemo.R
-import com.example.quickmemo.activity.room.entity.MemoEntity
 import com.example.quickmemo.activity.room.MemoRoomDatabase
+import com.example.quickmemo.activity.room.entity.MemoEntity
 import com.example.quickmemo.activity.util.Logger
 import com.example.quickmemo.activity.util.MyDateUtil
 import com.example.quickmemo.activity.viewmodel.MemoViewModel
@@ -106,11 +106,14 @@ class MemoActivity : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         if (viewModel.memoText.isNotEmpty() && !existPrevMemo(binding.textAreaInformation.text.toString())) {
-            save()
-            Toast.makeText(this, "Save on phone", Toast.LENGTH_SHORT).show()
-        }
-        else {
-            entity?.let { update(it) }
+            if(entity == null) {
+                save()
+                Toast.makeText(this, "Save on phone", Toast.LENGTH_SHORT).show()
+            }
+            else {
+                Toast.makeText(this, "Update", Toast.LENGTH_SHORT).show()
+                entity?.let { update(it) }
+            }
         }
     }
 }
