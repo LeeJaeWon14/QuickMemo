@@ -56,7 +56,7 @@ class MemoListFragment : Fragment() {
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter?.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
                     override fun onChanged() {
-                        if (binding.rvMemoList.adapter?.itemCount == 0) {
+                        if (binding.rvMemoList.adapter?.itemCount!! < 2) {
                             Toast.makeText(requireContext(), "목록이 비었습니다.", Toast.LENGTH_SHORT).show()
                         }
                     }
