@@ -35,10 +35,7 @@ class MemoActivity : AppCompatActivity() {
         intent.getBundleExtra("entityBundle")?.let {
             entity = it.getSerializable("entity") as MemoEntity
             binding.textAreaInformation.setText(entity?.memo)
-
-            // focus move to editText
-            binding.textAreaInformation.requestFocus()
-            binding.textAreaInformation.setSelection(viewModel.memoText.value!!.length)
+            setUpFocus()
         }
 
         when(intent.action) {
@@ -69,14 +66,15 @@ class MemoActivity : AppCompatActivity() {
 
         binding.apply {
             textAreaInformation.addTextChangedListener {
-                viewModel.memoText.value = it.toString()
+                viewModel.memoText = it.toString()
             }
 
             textAreaInformation.setOnScrollChangeListener { view: View, i: Int, i1: Int, i2: Int, i3: Int ->
-                if(binding.textAreaInformation.lineCount == binding.textAreaInformation.maxLines) {
+                if(binding.textAreaInformation.lineCount == binding.textAreaInformation.maxLines -1) {
                     Toast.makeText(this@MemoActivity, getString(R.string.str_text_line_max), Toast.LENGTH_SHORT).show()
                 }
             }
+            setUpFocus()
 
             fabBack.setOnClickListener {
                 onBackPressed()
@@ -90,7 +88,7 @@ class MemoActivity : AppCompatActivity() {
                 .insertMemo(
                     MemoEntity(
                     MyDateUtil.getDate(MyDateUtil.HANGUEL),
-                    viewModel.memoText.value!!,
+                    viewModel.memoText,
                     0
                 ))
         }
@@ -107,7 +105,7 @@ class MemoActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        if (viewModel.memoText.value!!.isNotEmpty() && !existPrevMemo(binding.textAreaInformation.text.toString())) {
+        if (viewModel.memoText.isNotEmpty() && !existPrevMemo(binding.textAreaInformation.text.toString())) {
             if(entity == null) {
                 save()
                 Toast.makeText(this, "Save on phone", Toast.LENGTH_SHORT).show()
@@ -117,5 +115,11 @@ class MemoActivity : AppCompatActivity() {
                 entity?.let { update(it) }
             }
         }
+    }
+
+    private fun setUpFocus() {
+        // focus move to editText
+        binding.textAreaInformation.requestFocus()
+        binding.textAreaInformation.setSelection(viewModel.memoText.length)
     }
 }

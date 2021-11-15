@@ -13,6 +13,8 @@
     <color name="purple_700_50">#806362FA</color>
     <color name="purple_500_50">#806F96DE</color>
     <color name="purple_200_50">#80BB86FC</color>
+    <color name="white_50">#80FFFFFF</color>
+
     <!--100% FF
         95%  F2
         90%  E6
