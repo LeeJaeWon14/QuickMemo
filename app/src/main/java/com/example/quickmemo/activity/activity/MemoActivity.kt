@@ -7,12 +7,10 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.quickmemo.R
 import com.example.quickmemo.activity.room.MemoRoomDatabase
 import com.example.quickmemo.activity.room.entity.MemoEntity
-import com.example.quickmemo.activity.util.Logger
 import com.example.quickmemo.activity.util.MyDateUtil
 import com.example.quickmemo.activity.viewmodel.MemoViewModel
 import com.example.quickmemo.databinding.ActivityMemoBinding
@@ -30,7 +28,6 @@ class MemoActivity : AppCompatActivity() {
         init()
 
         actionBar?.hide()
-        setSupportActionBar(binding.tbMemo)
 
         intent.getBundleExtra("entityBundle")?.let {
             entity = it.getSerializable("entity") as MemoEntity
