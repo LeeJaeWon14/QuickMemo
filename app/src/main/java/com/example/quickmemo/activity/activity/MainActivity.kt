@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.viewpager2.widget.ViewPager2
 import com.example.quickmemo.R
 import com.example.quickmemo.activity.adapter.MemoPagerAdatper
@@ -16,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     private val tabTitle = arrayOf("메모", "휴지통")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+//        val splash = installSplashScreen()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
