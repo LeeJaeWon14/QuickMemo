@@ -2,6 +2,8 @@ package com.example.quickmemo.activity.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
@@ -20,7 +22,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         actionBar?.hide()
-
 
         setSupportActionBar(binding.toolbar)
         bindingInit()
@@ -64,5 +65,17 @@ class MainActivity : AppCompatActivity() {
         else if(System.currentTimeMillis() - time < 2000) {
             this.finishAffinity()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_setting, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.menu_option -> { startActivity(Intent(this@MainActivity, SettingActivity::class.java)) }
+        }
+        return true
     }
 }
