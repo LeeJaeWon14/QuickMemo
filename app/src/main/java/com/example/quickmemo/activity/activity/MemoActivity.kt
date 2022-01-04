@@ -102,7 +102,7 @@ class MemoActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        if (viewModel.memoText.isNotEmpty() && !existPrevMemo(binding.textAreaInformation.text.toString())) {
+        if (viewModel.memoText.isNotEmpty() && !existPrevMemo(viewModel.memoText)) {
             if(entity == null) {
                 save()
                 Toast.makeText(this, "Save on phone", Toast.LENGTH_SHORT).show()

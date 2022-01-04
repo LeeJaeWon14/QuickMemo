@@ -2,16 +2,23 @@ package com.example.quickmemo.activity.adapter.recycler
 
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quickmemo.R
+import com.example.quickmemo.activity.ProgressFragment
+import com.example.quickmemo.activity.activity.MemoActivity
 import com.example.quickmemo.activity.room.MemoRoomDatabase
 import com.example.quickmemo.activity.room.entity.BasketEntity
 import com.example.quickmemo.activity.room.entity.MemoEntity
@@ -45,8 +52,11 @@ class BasketListAdapter(private var context : Context) : RecyclerView.Adapter<Ba
                         val dlg = AlertDialog.Builder(context)
                         dlg.setMessage(context.getString(R.string.str_restore_message))
                         dlg.setPositiveButton("복구") { _: DialogInterface, _: Int ->
+                            val progress = ProgressFragment()
+                            progress.show((context as FragmentActivity).supportFragmentManager, "Progressbar Fragment")
                             // restore
                             restoreMemo(entity, position)
+                            progress.dismiss()
                         }
                         dlg.setNegativeButton("취소", null)
                         dlg.setCancelable(false)
