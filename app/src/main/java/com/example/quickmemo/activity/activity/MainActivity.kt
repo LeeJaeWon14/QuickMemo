@@ -6,10 +6,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.viewpager2.widget.ViewPager2
 import com.example.quickmemo.R
 import com.example.quickmemo.activity.adapter.MemoPagerAdatper
+import com.example.quickmemo.activity.util.BiometricManager
+import com.example.quickmemo.activity.util.Pref
 import com.example.quickmemo.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         actionBar?.hide()
 
         setSupportActionBar(binding.toolbar)
+        checkPreference()
         bindingInit()
     }
 
@@ -79,5 +81,16 @@ class MainActivity : AppCompatActivity() {
             R.id.menu_option -> { startActivity(Intent(this@MainActivity, SettingActivity::class.java)) }
         }
         return true
+    }
+
+    private fun checkPreference() {
+        Pref.getInstance(this)?.let {
+            if(it.getBoolean(Pref.PREF_BIOMETRIC)) {
+                BiometricManager.getPrompt(this, null).authenticate(BiometricManager.getPromptInfo())
+            }
+            else {
+                // no-op
+            }
+        }
     }
 }

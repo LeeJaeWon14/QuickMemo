@@ -9,7 +9,8 @@ import android.widget.Toast
 
 class Pref(private val context : Context) {
     interface OnDataChanged {
-        fun onDataChanged(id : String?, data : String = "DELETE")
+        fun onDataChanged(id : String?)
+        fun onDateDeleted(id: String?)
     }
     private val PREF_NAME = "PrefOfLee"
     private var preference : SharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
@@ -31,9 +32,19 @@ class Pref(private val context : Context) {
         return preference.getString(id, "")
     }
 
+    fun getBoolean(id: String?) : Boolean {
+        return preference.getBoolean(id, false)
+    }
+
     fun setValue(id: String?, value: String) : Boolean {
         return preference.edit()
             .putString(id, value)
+            .commit()
+    }
+
+    fun setValue(id: String?, value: Boolean) : Boolean {
+        return preference.edit()
+            .putBoolean(id, value)
             .commit()
     }
 
@@ -45,7 +56,21 @@ class Pref(private val context : Context) {
 
     fun setValueWithCallback(id: String?, value: String, listener: OnDataChanged) : Boolean {
         if(setValue(id, value)) {
-            Handler(Looper.getMainLooper()).post(Runnable { listener.onDataChanged(id, value) })
+            Handler(Looper.getMainLooper()).post(Runnable { listener.onDataChanged(id) })
+            Logger.e("SharedPreference >> setValue Success")
+            return true
+        }
+        else {
+            if(listener is Activity)
+                Toast.makeText(listener, "Preference Error!", Toast.LENGTH_SHORT).show()
+            Logger.e("SharedPreference >> setValue Failure")
+            return false
+        }
+    }
+
+    fun setValueWithCallback(id: String?, value: Boolean, listener: OnDataChanged) : Boolean {
+        if(setValue(id, value)) {
+            Handler(Looper.getMainLooper()).post(Runnable { listener.onDataChanged(id) })
             Logger.e("SharedPreference >> setValue Success")
             return true
         }
@@ -59,7 +84,7 @@ class Pref(private val context : Context) {
 
     fun removeValueWithCallback(id: String?, listener: OnDataChanged) : Boolean {
         if(removeValue(id)) {
-            Handler(Looper.getMainLooper()).post(Runnable { listener.onDataChanged(id) })
+            Handler(Looper.getMainLooper()).post(Runnable { listener.onDateDeleted(id) })
             Logger.e("SharedPreference >> removeValue Success")
             return true
         }

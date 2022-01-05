@@ -5,15 +5,19 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
-import androidx.core.content.ContextCompat
+import com.example.quickmemo.R
+import com.example.quickmemo.activity.util.BiometricManager
+import com.example.quickmemo.activity.util.Pref
 import com.example.quickmemo.databinding.ActivitySettingBinding
 
-class SettingActivity : AppCompatActivity() {
+class SettingActivity : AppCompatActivity(), Pref.OnDataChanged {
     private lateinit var binding: ActivitySettingBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        checkPreference()
 
         binding.apply {
             chkBiometric.setOnCheckedChangeListener { compoundButton, checked ->
@@ -21,49 +25,58 @@ class SettingActivity : AppCompatActivity() {
                     AlertDialog.Builder(this@SettingActivity)
                         .setMessage("생체인식을 사용하시겠습니까?")
                         .setPositiveButton("사용") { _, _ ->
-                            val executor = ContextCompat.getMainExecutor(this@SettingActivity)
-                            val biometricPrompt = BiometricPrompt(
+                            BiometricManager.getPrompt(
                                 this@SettingActivity,
-                                executor,
                                 object : BiometricPrompt.AuthenticationCallback() {
                                     override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                                         super.onAuthenticationSucceeded(result)
-                                        Toast.makeText(this@SettingActivity, "지문인식 성공", Toast.LENGTH_SHORT).show()
+                                        Pref.getInstance(this@SettingActivity)?.setValueWithCallback(Pref.PREF_BIOMETRIC, true, this@SettingActivity)
                                     }
-
-                                    override fun onAuthenticationError(
-                                        errorCode: Int,
-                                        errString: CharSequence
-                                    ) {
-                                        super.onAuthenticationError(errorCode, errString)
-                                        Toast.makeText(this@SettingActivity, "onAuthenticationError", Toast.LENGTH_SHORT).show()
-                                    }
-
-                                    override fun onAuthenticationFailed() {
-                                        super.onAuthenticationFailed()
-                                        Toast.makeText(this@SettingActivity, "onAuthenticationFailed", Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-                            )
-
-                            val promptInfo = BiometricPrompt.PromptInfo.Builder()
-                                .setTitle("생체 인식")
-                                .setSubtitle("지문 인증을 해주세요")
-                                .setNegativeButtonText("취소")
-                                .setDeviceCredentialAllowed(false)
-                                .build()
+                                })
+                                .authenticate(BiometricManager.getPromptInfo())
                         }
-                        .setNegativeButton("취소", null)
+                        .setNegativeButton(getString(R.string.str_cancel_button_text), null)
+                        .setCancelable(false)
                         .show()
                 }
                 else {
                     AlertDialog.Builder(this@SettingActivity)
-                        .setMessage("생체인식을 해제하시겠습니까?")
-                        .setPositiveButton("해제", null)
-                        .setNegativeButton("취소", null)
+                        .setMessage(getString(R.string.str_request_biometric_remove))
+                        .setPositiveButton("해제") { _, _ ->
+                            BiometricManager.getPrompt(
+                                this@SettingActivity,
+                                object : BiometricPrompt.AuthenticationCallback() {
+                                    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                                        super.onAuthenticationSucceeded(result)
+                                        Pref.getInstance(this@SettingActivity)?.removeValueWithCallback(Pref.PREF_BIOMETRIC, this@SettingActivity)
+                                    }
+                                })
+                                .authenticate(
+                                    BiometricManager.getPromptInfo(
+                                        "생체 인식",
+                                        "생체 인식을 진행해주세요"
+                                    )
+                                )
+                        }
+                        .setNegativeButton(getString(R.string.str_cancel_button_text), null)
+                        .setCancelable(false)
                         .show()
                 }
             }
         }
+    }
+
+    private fun checkPreference() {
+        Pref.getInstance(this)?.let {
+            binding.chkBiometric.isChecked = it.getBoolean(Pref.PREF_BIOMETRIC)
+        }
+    }
+
+    override fun onDataChanged(id: String?) {
+        Toast.makeText(this, getString(R.string.str_biometric_add_success), Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onDateDeleted(id: String?) {
+        Toast.makeText(this, getString(R.string.str_biometric_remove_success), Toast.LENGTH_SHORT).show()
     }
 }
