@@ -103,15 +103,16 @@ class MemoActivity : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         if (viewModel.memoText.isNotEmpty() && !existPrevMemo(viewModel.memoText)) {
-            if(entity == null) {
-                save()
-                Toast.makeText(this, "Save on phone", Toast.LENGTH_SHORT).show()
-            }
+            if(entity == null) save()
             else {
                 Toast.makeText(this, "Update", Toast.LENGTH_SHORT).show()
                 entity?.let { update(it) }
             }
         }
+//        startActivity(Intent(this@MemoActivity, MainActivity::class.java).apply {
+//            putExtra("unLock", true)
+//        })
+        finish()
     }
 
     private fun setUpFocus() {

@@ -66,6 +66,10 @@ class SettingActivity : AppCompatActivity(), Pref.OnDataChanged {
         }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+    }
+
     private fun checkPreference() {
         Pref.getInstance(this)?.let {
             binding.chkBiometric.isChecked = it.getBoolean(Pref.PREF_BIOMETRIC)
