@@ -6,10 +6,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.BiometricPrompt
+import androidx.core.view.isVisible
 import androidx.viewpager2.widget.ViewPager2
 import com.example.quickmemo.R
 import com.example.quickmemo.activity.adapter.MemoPagerAdatper
 import com.example.quickmemo.activity.util.BiometricManager
+import com.example.quickmemo.activity.util.Logger
 import com.example.quickmemo.activity.util.Pref
 import com.example.quickmemo.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
@@ -52,6 +55,11 @@ class MainActivity : AppCompatActivity() {
                     binding.toolbar.title = tabTitle[position]
                 }
             })
+
+            fabFingerprint.setOnClickListener {
+                Logger.e("try Fingerprint")
+                checkPreference()
+            }
         }
     }
 
@@ -86,7 +94,18 @@ class MainActivity : AppCompatActivity() {
     private fun checkPreference() {
         Pref.getInstance(this)?.let {
             if(it.getBoolean(Pref.PREF_BIOMETRIC)) {
-                BiometricManager.getPrompt(this, null).authenticate(BiometricManager.getPromptInfo())
+                BiometricManager.getPrompt(this, object : BiometricPrompt.AuthenticationCallback() {
+                    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                        super.onAuthenticationSucceeded(result)
+                        binding.llLockScreen.isVisible = false
+                        binding.rlContent.isVisible = true
+                    }
+
+                    override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                        super.onAuthenticationError(errorCode, errString)
+                        Toast.makeText(this@MainActivity, getString(R.string.str_unlock_to_fingerprint_message), Toast.LENGTH_SHORT).show()
+                    }
+                }).authenticate(BiometricManager.getPromptInfo())
             }
             else {
                 // no-op

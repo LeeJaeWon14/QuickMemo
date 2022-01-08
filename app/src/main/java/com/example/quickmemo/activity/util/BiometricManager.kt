@@ -14,7 +14,7 @@ object BiometricManager {
             callback ?: object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                     super.onAuthenticationSucceeded(result)
-                    Toast.makeText(activity, "지문인식 성공", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "생체인식 성공", Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onAuthenticationError(
@@ -22,12 +22,12 @@ object BiometricManager {
                     errString: CharSequence
                 ) {
                     super.onAuthenticationError(errorCode, errString)
-                    Toast.makeText(activity, "onAuthenticationError", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "생체 인식이 필요합니다.", Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onAuthenticationFailed() {
                     super.onAuthenticationFailed()
-                    Toast.makeText(activity, "지문인식 실패", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "생체인식 실패", Toast.LENGTH_SHORT).show()
                 }
             }
         )
