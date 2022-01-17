@@ -1,6 +1,8 @@
 package com.example.quickmemo.activity.activity
 
+import android.content.DialogInterface
 import android.os.Bundle
+import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -20,8 +22,8 @@ class SettingActivity : AppCompatActivity(), Pref.OnDataChanged {
         checkPreference()
 
         binding.apply {
-            chkBiometric.setOnCheckedChangeListener { compoundButton, checked ->
-                if(checked) {
+            chkBiometric.setOnClickListener {
+                if((it as CompoundButton).isChecked) {
                     AlertDialog.Builder(this@SettingActivity)
                         .setMessage("생체인식을 사용하시겠습니까?")
                         .setPositiveButton("사용") { _, _ ->
@@ -35,7 +37,9 @@ class SettingActivity : AppCompatActivity(), Pref.OnDataChanged {
                                 })
                                 .authenticate(BiometricManager.getPromptInfo())
                         }
-                        .setNegativeButton(getString(R.string.str_cancel_button_text), null)
+                        .setNegativeButton(getString(R.string.str_cancel_button_text)) { _, _ ->
+                            chkBiometric.run { isChecked = !isChecked }
+                        }
                         .setCancelable(false)
                         .show()
                 }
@@ -58,10 +62,15 @@ class SettingActivity : AppCompatActivity(), Pref.OnDataChanged {
                                     )
                                 )
                         }
-                        .setNegativeButton(getString(R.string.str_cancel_button_text), null)
+                        .setNegativeButton(getString(R.string.str_cancel_button_text)) { dialogInterface: DialogInterface, i: Int ->
+                            chkBiometric.run { isChecked = !isChecked }
+                        }
                         .setCancelable(false)
                         .show()
                 }
+            }
+            chkBiometric.setOnCheckedChangeListener { _, checked ->
+                // no-op
             }
         }
     }

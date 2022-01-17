@@ -10,7 +10,6 @@
     <CheckBox
         android:id = "@+id/chk_biometric"
         style="@style/CheckboxStyle"
-        android:text="@string/str_setting_biometric"
-        android:textAlignment="center"/>
+        android:text="@string/str_setting_biometric"/>
 
 </LinearLayout>
