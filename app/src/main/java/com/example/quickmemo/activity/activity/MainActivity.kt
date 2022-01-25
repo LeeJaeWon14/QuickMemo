@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        fabAction()
+        if(isFabOpened) fabAction()
     }
 
     override fun onResume() {
