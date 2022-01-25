@@ -40,7 +40,6 @@ class MemoListAdapter(private var context : Context) : RecyclerView.Adapter<Memo
             holder.apply {
                 val entity = it[position]
                 card.apply {
-//                    setBackgroundColor(ContextCompat.getColor(context, randomColor()))
                     setBackgroundResource(randomColor())
                     setOnClickListener {
                         val bundle = Bundle()
@@ -52,7 +51,6 @@ class MemoListAdapter(private var context : Context) : RecyclerView.Adapter<Memo
                         popup.setOnMenuItemClickListener {
                             when(it.itemId) {
                                 R.id.menu_memo_share -> {
-//                                    Toast.makeText(context, context.getString(R.string.str_memo_share), Toast.LENGTH_SHORT).show()
                                     val intent = Intent(Intent.ACTION_SEND)
                                     intent.type = "text/plain"
                                     intent.putExtra(Intent.EXTRA_TEXT, "${entity.memo} \r\n ---------- \r\nby. ${context.getString(R.string.app_name)}")

@@ -5,4 +5,5 @@
     <string name="str_text_line_max">최대 라인 수에 도달했습니다.</string>
     <string name="str_memo_restore">복구하기</string>
     <string name="str_restore_message">휴지통에선 열람할 수 없습니다. \n복구하시겠습니까?</string>
+    <string name="str_need_opengraph_app">OpenGraph 앱 설치 필요</string>
 </resources>

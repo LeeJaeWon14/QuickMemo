@@ -1,5 +1,6 @@
 package com.example.quickmemo.activity.activity
 
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -17,7 +18,6 @@ class MainActivity : AppCompatActivity() {
     private val tabTitle = arrayOf("메모", "휴지통")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        val splash = installSplashScreen()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -32,8 +32,20 @@ class MainActivity : AppCompatActivity() {
         binding.apply {
             toolbar.title = tabTitle[0]
             toolbar.setTitleTextColor(getColor(R.color.white))
-            fab.setOnClickListener {
+            fabAdd.setOnClickListener {
+                fabAction()
+            }
+            fabMemo.setOnClickListener {
                 startActivity(Intent(this@MainActivity, MemoActivity::class.java))
+            }
+            fabBookmark.setOnClickListener {
+                // OpenGraph
+                val intent = packageManager.getLaunchIntentForPackage("com.example.opengraphsample")
+                intent?.let {
+                    startActivity(intent)
+                } ?: run {
+                    Toast.makeText(this@MainActivity, getString(R.string.str_need_opengraph_app), Toast.LENGTH_SHORT).show()
+                }
             }
             viewPager.adapter = MemoPagerAdatper(this@MainActivity)
             TabLayoutMediator(binding.tlTab, binding.viewPager, object : TabLayoutMediator.TabConfigurationStrategy {
@@ -55,6 +67,22 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         binding.viewPager.adapter = MemoPagerAdatper(this@MainActivity)
+    }
+
+    private var isFabOpened = false
+    private fun fabAction() {
+        if(isFabOpened) {
+            ObjectAnimator.ofFloat(binding.fabMemo, "translationX", 0f).apply { start() }
+            ObjectAnimator.ofFloat(binding.fabBookmark, "translationX", 0f).apply { start() }
+            binding.fabAdd.setImageResource(R.drawable.outline_add_24)
+        }
+        else {
+            ObjectAnimator.ofFloat(binding.fabMemo, "translationX", -200f).apply { start() }
+            ObjectAnimator.ofFloat(binding.fabBookmark, "translationX", -400f).apply { start() }
+            binding.fabAdd.setImageResource(R.drawable.outline_clear_24)
+        }
+
+        isFabOpened = !isFabOpened
     }
 
     private var time : Long = 0
