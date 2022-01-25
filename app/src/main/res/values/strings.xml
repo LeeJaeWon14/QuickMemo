@@ -5,5 +5,13 @@
     <string name="str_text_line_max">최대 라인 수에 도달했습니다.</string>
     <string name="str_memo_restore">복구하기</string>
     <string name="str_restore_message">휴지통에선 열람할 수 없습니다. \n복구하시겠습니까?</string>
+    <string name="str_menu_option">설정</string>
+    <string name="str_setting_biometric">생체인식 사용</string>
+    <string name="str_cancel_button_text">취소</string>
+    <string name="str_biometric_add_success">생체 인식이 등록되었습니다.</string>
+    <string name="str_biometric_remove_success">생체 인식이 해제되었습니다.</string>
+    <string name="str_request_biometric">생체 인식이 설정되었습니다.</string>
+    <string name="str_request_biometric_remove">생체인식을 해제하시겠습니까?</string>
+    <string name="str_unlock_to_fingerprint_message">생체인식을 통해서 잠금을 풀어주세요.</string>
     <string name="str_need_opengraph_app">OpenGraph 앱 설치 필요</string>
 </resources>

@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quickmemo.R
+import com.example.quickmemo.activity.activity.MainActivity
 import com.example.quickmemo.activity.activity.MemoActivity
 import com.example.quickmemo.activity.room.MemoRoomDatabase
 import com.example.quickmemo.activity.room.entity.BasketEntity
@@ -45,6 +46,7 @@ class MemoListAdapter(private var context : Context) : RecyclerView.Adapter<Memo
                         val bundle = Bundle()
                         bundle.putSerializable("entity", entity)
                         context.startActivity(Intent(context, MemoActivity::class.java).putExtra("entityBundle", bundle))
+                        (context as MainActivity).isUnlock = true
                     }
                     setOnLongClickListener {
                         val popup = PopupMenu(context, it)
