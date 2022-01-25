@@ -14,4 +14,6 @@
     <string name="str_request_biometric_remove">생체인식을 해제하시겠습니까?</string>
     <string name="str_unlock_to_fingerprint_message">생체인식을 통해서 잠금을 풀어주세요.</string>
     <string name="str_need_opengraph_app">OpenGraph 앱 설치 필요</string>
+    <string name="str_biometric_error_no_hardware">생체 인식을 지원하지 않는 기기입니다.</string>
+    <string name="str_biometric_error_hw_unavailable">생체 인식을 현재 사용할 수 없습니다.</string>
 </resources>

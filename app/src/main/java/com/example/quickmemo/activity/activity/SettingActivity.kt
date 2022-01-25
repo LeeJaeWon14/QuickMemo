@@ -27,15 +27,17 @@ class SettingActivity : AppCompatActivity(), Pref.OnDataChanged {
                     AlertDialog.Builder(this@SettingActivity)
                         .setMessage("생체인식을 사용하시겠습니까?")
                         .setPositiveButton("사용") { _, _ ->
-                            BiometricManager.getPrompt(
-                                this@SettingActivity,
-                                object : BiometricPrompt.AuthenticationCallback() {
-                                    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                                        super.onAuthenticationSucceeded(result)
-                                        Pref.getInstance(this@SettingActivity)?.setValueWithCallback(Pref.PREF_BIOMETRIC, true, this@SettingActivity)
-                                    }
-                                })
-                                .authenticate(BiometricManager.getPromptInfo())
+                            if(BiometricManager.canUseFingerPrint(this@SettingActivity)) {
+                                BiometricManager.getPrompt(
+                                    this@SettingActivity,
+                                    object : BiometricPrompt.AuthenticationCallback() {
+                                        override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                                            super.onAuthenticationSucceeded(result)
+                                            Pref.getInstance(this@SettingActivity)?.setValueWithCallback(Pref.PREF_BIOMETRIC, true, this@SettingActivity)
+                                        }
+                                    })
+                                    .authenticate(BiometricManager.getPromptInfo())
+                            }else { chkBiometric.run { isChecked = !isChecked } }
                         }
                         .setNegativeButton(getString(R.string.str_cancel_button_text)) { _, _ ->
                             chkBiometric.run { isChecked = !isChecked }

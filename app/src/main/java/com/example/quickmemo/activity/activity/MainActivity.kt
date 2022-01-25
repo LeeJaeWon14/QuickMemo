@@ -31,7 +31,6 @@ class MainActivity : AppCompatActivity() {
 
         actionBar?.hide()
         setSupportActionBar(binding.toolbar)
-//        checkPreference()
         bindingInit()
     }
 
@@ -77,16 +76,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-//        if(!isUnlock && !isExit) {
-//            binding.llLockScreen.isVisible = true
-//            binding.rlContent.isVisible = false
-//        }
+        fabAction()
     }
 
     override fun onResume() {
         super.onResume()
-//        isUnlock = intent.getBooleanExtra("unLock", false)
-//        Logger.e("isUnlock is $isUnlock")
         binding.viewPager.adapter = MemoPagerAdatper(this@MainActivity)
         if(!isUnlock) {
             binding.llLockScreen.isVisible = true
