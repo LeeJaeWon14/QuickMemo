@@ -16,4 +16,6 @@
     <string name="str_need_opengraph_app">OpenGraph 앱 설치 필요</string>
     <string name="str_biometric_error_no_hardware">생체 인식을 지원하지 않는 기기입니다.</string>
     <string name="str_biometric_error_hw_unavailable">생체 인식을 현재 사용할 수 없습니다.</string>
+    <string name="str_ok_label">확인</string>
+    <string name="str_cancel_label">취소</string>
 </resources>

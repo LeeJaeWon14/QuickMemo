@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
 import androidx.core.view.isVisible
@@ -50,7 +51,13 @@ class MainActivity : AppCompatActivity() {
                 intent?.let {
                     startActivity(intent)
                 } ?: run {
-                    Toast.makeText(this@MainActivity, getString(R.string.str_need_opengraph_app), Toast.LENGTH_SHORT).show()
+                    AlertDialog.Builder(this@MainActivity)
+                        .setMessage(getString(R.string.str_need_opengraph_app))
+                        .setPositiveButton(getString(R.string.str_ok_label)) { _, _ ->
+                            // move to OpenGraph install site.
+                        }
+                        .setNegativeButton(getString(R.string.str_cancel_label), null)
+                        .show()
                 }
             }
             viewPager.adapter = MemoPagerAdatper(this@MainActivity)
