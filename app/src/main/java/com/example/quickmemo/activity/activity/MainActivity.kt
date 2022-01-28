@@ -2,6 +2,7 @@ package com.example.quickmemo.activity.activity
 
 import android.animation.ObjectAnimator
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -54,7 +55,10 @@ class MainActivity : AppCompatActivity() {
                     AlertDialog.Builder(this@MainActivity)
                         .setMessage(getString(R.string.str_need_opengraph_app))
                         .setPositiveButton(getString(R.string.str_ok_label)) { _, _ ->
-                            // move to OpenGraph install site.
+                            startActivity(Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("https://linksharing.samsungcloud.com/q1UL29jHPqMA")
+                            ))
                         }
                         .setNegativeButton(getString(R.string.str_cancel_label), null)
                         .show()
