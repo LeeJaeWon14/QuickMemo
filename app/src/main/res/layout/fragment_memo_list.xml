@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:gravity="center" >
-
+    <TextView
+        android:id="@+id/tv_memo_is_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        tools:text="@string/str_memo_is_empty"
+        android:textSize="30dp"
+        android:fontFamily="@font/swagger" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id = "@+id/rv_memoList"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
     </androidx.recyclerview.widget.RecyclerView>
-
-<!--    <TextView-->
-<!--        android:id="@+id/text"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        tools:text = "test"-->
-<!--        android:textSize="50dp" />-->
-
-</LinearLayout>
+</RelativeLayout>

@@ -112,6 +112,7 @@ class MemoActivity : AppCompatActivity() {
 //        startActivity(Intent(this@MemoActivity, MainActivity::class.java).apply {
 //            putExtra("unLock", true)
 //        })
+        MainActivity().isUnlock = true
         finish()
     }
 

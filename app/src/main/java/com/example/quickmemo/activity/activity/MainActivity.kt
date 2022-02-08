@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
     private val tabTitle = arrayOf("메모", "휴지통")
     var isUnlock = false
-    private var isExit = false
+//    private var isExit = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -129,7 +129,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this@MainActivity, "한번 더 누르면 종료합니다", Toast.LENGTH_SHORT).show()
         }
         else if(System.currentTimeMillis() - time < 2000) {
-            isExit = true
+//            isExit = true
             this.finishAffinity()
         }
     }

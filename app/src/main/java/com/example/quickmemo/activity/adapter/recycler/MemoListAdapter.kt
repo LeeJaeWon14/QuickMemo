@@ -12,16 +12,16 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quickmemo.R
-import com.example.quickmemo.activity.activity.MainActivity
 import com.example.quickmemo.activity.activity.MemoActivity
 import com.example.quickmemo.activity.room.MemoRoomDatabase
 import com.example.quickmemo.activity.room.entity.BasketEntity
 import com.example.quickmemo.activity.room.entity.MemoEntity
 import kotlin.random.Random
 
-class MemoListAdapter(private var context : Context) : RecyclerView.Adapter<MemoListAdapter.MemoListHolder>() {
-    private var memoList = MemoRoomDatabase.getInstance(context).getMemoDAO().getMemoList().toMutableList()
-    private var size : Int = memoList.size
+class MemoListAdapter(private var memoList : MutableList<MemoEntity>?) : RecyclerView.Adapter<MemoListAdapter.MemoListHolder>() {
+//    private var memoList = MemoRoomDatabase.getInstance(context).getMemoDAO().getMemoList().toMutableList()
+    private var size : Int = memoList?.size ?: 0
+    private lateinit var context: Context
 
     class MemoListHolder(view : View) : RecyclerView.ViewHolder(view) {
         val date : TextView = view.findViewById(R.id.tv_lastDate)
@@ -37,7 +37,7 @@ class MemoListAdapter(private var context : Context) : RecyclerView.Adapter<Memo
     }
 
     override fun onBindViewHolder(holder: MemoListHolder, position: Int) {
-        memoList.let {
+        memoList?.let {
             holder.apply {
                 val entity = it[position]
                 card.apply {
@@ -46,7 +46,7 @@ class MemoListAdapter(private var context : Context) : RecyclerView.Adapter<Memo
                         val bundle = Bundle()
                         bundle.putSerializable("entity", entity)
                         context.startActivity(Intent(context, MemoActivity::class.java).putExtra("entityBundle", bundle))
-                        (context as MainActivity).isUnlock = true
+//                        (context as MainActivity).isUnlock = true
                     }
                     setOnLongClickListener {
                         val popup = PopupMenu(context, it)
@@ -95,18 +95,21 @@ class MemoListAdapter(private var context : Context) : RecyclerView.Adapter<Memo
 
     private fun removeMemo(entity: MemoEntity, position: Int) {
 //        if(memoList.size == 1) return
-        memoList.removeAt(position)
-        MemoRoomDatabase.getInstance(context).getMemoDAO()
-            .deleteMemo(entity)
-        MemoRoomDatabase.getInstance(context).getBasketDAO()
-            .insertBasket(
-                BasketEntity(
-                    entity.last_date,
-                    entity.memo,
-                    0
+        memoList?.let {
+            it.removeAt(position)
+            MemoRoomDatabase.getInstance(context).getMemoDAO()
+                .deleteMemo(entity)
+            MemoRoomDatabase.getInstance(context).getBasketDAO()
+                .insertBasket(
+                    BasketEntity(
+                        entity.last_date,
+                        entity.memo,
+                        0
+                    )
                 )
-            )
-        size = memoList.size
-        notifyDataSetChanged()
+            size = it.size
+            notifyDataSetChanged()
+
+        }
     }
 }
