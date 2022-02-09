@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.quickmemo.activity.fragment.MemoListFragment
 
-class MemoPagerAdatper(fragmentActivity : FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
+class MemoPagerAdapter(fragmentActivity : FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
     override fun getItemCount(): Int {
         return 2
     }

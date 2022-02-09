@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quickmemo.R
 import com.example.quickmemo.activity.ProgressFragment
+import com.example.quickmemo.activity.activity.MainActivity
 import com.example.quickmemo.activity.room.MemoRoomDatabase
 import com.example.quickmemo.activity.room.entity.BasketEntity
 import com.example.quickmemo.activity.room.entity.MemoEntity
@@ -104,6 +105,9 @@ class BasketListAdapter(private var memoList : MutableList<BasketEntity>?) : Rec
                 .deleteBasket(entity)
             size = it.size
             notifyDataSetChanged()
+            if(size < 1) {
+                (context as MainActivity).updatePager(1)
+            }
         }
     }
 

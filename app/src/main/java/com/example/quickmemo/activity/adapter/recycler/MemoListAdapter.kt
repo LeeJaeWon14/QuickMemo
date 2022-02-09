@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quickmemo.R
+import com.example.quickmemo.activity.activity.MainActivity
 import com.example.quickmemo.activity.activity.MemoActivity
 import com.example.quickmemo.activity.room.MemoRoomDatabase
 import com.example.quickmemo.activity.room.entity.BasketEntity
@@ -110,6 +111,9 @@ class MemoListAdapter(private var memoList : MutableList<MemoEntity>?) : Recycle
             size = it.size
             notifyDataSetChanged()
 
+        }
+        if(size < 1) {
+            (context as MainActivity).updatePager(0)
         }
     }
 }

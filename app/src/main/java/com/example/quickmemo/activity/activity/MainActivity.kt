@@ -11,11 +11,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.example.quickmemo.R
-import com.example.quickmemo.activity.adapter.MemoPagerAdatper
+import com.example.quickmemo.activity.adapter.MemoPagerAdapter
 import com.example.quickmemo.activity.util.BiometricManager
 import com.example.quickmemo.activity.util.Pref
+import com.example.quickmemo.activity.viewmodel.MemoViewModel
 import com.example.quickmemo.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -24,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
     private val tabTitle = arrayOf("메모", "휴지통")
     var isUnlock = false
-//    private var isExit = false
+    private lateinit var viewModel: MemoViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 
         actionBar?.hide()
         setSupportActionBar(binding.toolbar)
+        viewModel = ViewModelProvider(this).get(MemoViewModel::class.java)
         bindingInit()
     }
 
@@ -64,7 +67,7 @@ class MainActivity : AppCompatActivity() {
                         .show()
                 }
             }
-            viewPager.adapter = MemoPagerAdatper(this@MainActivity)
+            viewPager.adapter = MemoPagerAdapter(this@MainActivity)
             TabLayoutMediator(binding.tlTab, binding.viewPager, object : TabLayoutMediator.TabConfigurationStrategy {
                 override fun onConfigureTab(tab: TabLayout.Tab, position: Int) {
 //                    tab.text = tabTitle[position]
@@ -87,23 +90,25 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
+        // when paused app, if opened fabs, close that
         if(isFabOpened) fabAction()
     }
 
     override fun onResume() {
         super.onResume()
-        binding.viewPager.adapter = MemoPagerAdatper(this@MainActivity)
-        if(!isUnlock) {
+        binding.viewPager.adapter = MemoPagerAdapter(this@MainActivity)
+        if(!viewModel.isUnlock) {
             binding.llLockScreen.isVisible = true
             binding.rlContent.isVisible = false
             checkPreference()
         }
         else {
-            // When move Activity
+            // When move activity
             binding.llLockScreen.isVisible = false
             binding.rlContent.isVisible = true
         }
-        isUnlock = false
+//        isUnlock = false
+        viewModel.isUnlock = false
     }
 
     private var isFabOpened = false
@@ -129,7 +134,6 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this@MainActivity, "한번 더 누르면 종료합니다", Toast.LENGTH_SHORT).show()
         }
         else if(System.currentTimeMillis() - time < 2000) {
-//            isExit = true
             this.finishAffinity()
         }
     }
@@ -142,7 +146,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.menu_option -> {
-                isUnlock = true
+                viewModel.isUnlock = true
                 startActivity(Intent(this@MainActivity, SettingActivity::class.java))
             }
         }
@@ -170,5 +174,12 @@ class MainActivity : AppCompatActivity() {
                 binding.rlContent.isVisible = true
             }
         }
+    }
+
+    fun updatePager(position: Int) {
+        supportFragmentManager.fragments.get(position).onResume()
+//        supportFragmentManager.fragments.forEach {
+//            it.onResume()
+//        }
     }
 }

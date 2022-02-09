@@ -13,7 +13,6 @@ import com.example.quickmemo.R
 import com.example.quickmemo.activity.adapter.recycler.BasketListAdapter
 import com.example.quickmemo.activity.adapter.recycler.MemoListAdapter
 import com.example.quickmemo.activity.room.MemoRoomDatabase
-import com.example.quickmemo.activity.util.Logger
 import com.example.quickmemo.databinding.FragmentMemoListBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -94,34 +93,6 @@ class MemoListFragment : Fragment() {
         _binding = null
     }
 
-//    private fun checkEmpty(memoList: List<*>, isEmpty: Boolean = memoList.isEmpty()) {
-//        binding.apply {
-//            rvMemoList.isVisible = !isEmpty
-//            tvMemoIsEmpty.isVisible = isEmpty
-//            if(tvMemoIsEmpty.isVisible) {
-//                tvMemoIsEmpty.text = when(memoList[0]) {
-//                    is MemoEntity -> {
-//
-//                        Logger.e("list is MemoEntity")
-//                        getString(R.string.str_memo_is_empty)
-//                    }
-//                    is BasketEntity -> {
-//                        BasketListAdapter(null)
-//                        Logger.e("list is BasketEntity")
-//                        getString(R.string.str_basket_is_empty)
-//                    }
-//                    else -> ""
-//                }
-//            }
-//            else {
-//                when(memoList) {
-////                    is MemoActivity -> {}
-////                    is BasketEntity -> BasketListAdapter()
-//                }
-//            }
-//        }
-//    }
-
     /**
      * @return true is empty list, false is not empty list
      */
@@ -131,16 +102,8 @@ class MemoListFragment : Fragment() {
             tvMemoIsEmpty.isVisible = isEmpty
             if(tvMemoIsEmpty.isVisible) {
                 tvMemoIsEmpty.text = when(page) {
-                    0 -> {
-                        // when page is memo list.
-                        Logger.e("list is MemoEntity")
-                        getString(R.string.str_memo_is_empty)
-                    }
-                    1 -> {
-                        // when page is basket list.
-                        Logger.e("list is BasketEntity")
-                        getString(R.string.str_basket_is_empty)
-                    }
+                    0 -> getString(R.string.str_memo_is_empty) // when page is memo list.
+                    1 -> getString(R.string.str_basket_is_empty) // when page is basket list.
                     else -> ""
                 }
                 return true
