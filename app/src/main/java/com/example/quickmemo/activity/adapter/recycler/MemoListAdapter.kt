@@ -42,11 +42,16 @@ class MemoListAdapter(private var memoList : MutableList<MemoEntity>?) : Recycle
             holder.apply {
                 val entity = it[position]
                 card.apply {
-                    setBackgroundResource(randomColor())
+                    val color = randomColor()
+                    setBackgroundResource(color)
                     setOnClickListener {
                         val bundle = Bundle()
                         bundle.putSerializable("entity", entity)
-                        context.startActivity(Intent(context, MemoActivity::class.java).putExtra("entityBundle", bundle))
+                        context.startActivity(Intent(context, MemoActivity::class.java).apply {
+                            putExtra("entityBundle", bundle)
+//                            Logger.e("this card background color is $cardBackgroundColor")
+                            putExtra("backgroundColor", color)
+                        })
 //                        (context as MainActivity).isUnlock = true
                     }
                     setOnLongClickListener {

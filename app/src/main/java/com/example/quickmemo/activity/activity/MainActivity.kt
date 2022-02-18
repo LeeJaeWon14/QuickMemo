@@ -114,6 +114,7 @@ class MainActivity : AppCompatActivity() {
     private var isFabOpened = false
     private fun fabAction() {
         if(isFabOpened) {
+            // TODO: duration 필요한지 ..?
             ObjectAnimator.ofFloat(binding.fabMemo, "translationX", 0f).apply { start() }
             ObjectAnimator.ofFloat(binding.fabBookmark, "translationX", 0f).apply { start() }
             binding.fabAdd.setImageResource(R.drawable.outline_add_24)

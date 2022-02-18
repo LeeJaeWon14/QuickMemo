@@ -62,6 +62,7 @@ class MemoActivity : AppCompatActivity() {
 //        })
 
         binding.apply {
+            rlMemoBackground.setBackgroundColor(getColor(R.color.purple_700))
             textAreaInformation.addTextChangedListener {
                 viewModel.memoText = it.toString()
             }
