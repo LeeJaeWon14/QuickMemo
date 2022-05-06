@@ -18,4 +18,6 @@
     <string name="str_biometric_error_hw_unavailable">생체 인식을 현재 사용할 수 없습니다.</string>
     <string name="str_ok_label">확인</string>
     <string name="str_cancel_label">취소</string>
+    <string name="str_memo_is_empty">메모가 없습니다. 지금 추가해보세요.</string>
+    <string name="str_basket_is_empty">휴지통이 비었습니다.</string>
 </resources>

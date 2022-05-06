@@ -15,14 +15,16 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quickmemo.R
 import com.example.quickmemo.activity.ProgressFragment
+import com.example.quickmemo.activity.activity.MainActivity
 import com.example.quickmemo.activity.room.MemoRoomDatabase
 import com.example.quickmemo.activity.room.entity.BasketEntity
 import com.example.quickmemo.activity.room.entity.MemoEntity
 import kotlin.random.Random
 
-class BasketListAdapter(private var context : Context) : RecyclerView.Adapter<BasketListAdapter.MemoListHolder>() {
-    private val memoList = MemoRoomDatabase.getInstance(context).getBasketDAO().getBasketList().toMutableList()
-    private var size : Int = memoList.size
+class BasketListAdapter(private var memoList : MutableList<BasketEntity>?) : RecyclerView.Adapter<BasketListAdapter.MemoListHolder>() {
+//    private val memoList = MemoRoomDatabase.getInstance(context).getBasketDAO().getBasketList().toMutableList()
+    private var size : Int = memoList?.size ?: 0
+    private lateinit var context: Context
 
     class MemoListHolder(view : View) : RecyclerView.ViewHolder(view) {
         val date : TextView = view.findViewById(R.id.tv_lastDate)
@@ -38,11 +40,10 @@ class BasketListAdapter(private var context : Context) : RecyclerView.Adapter<Ba
     }
 
     override fun onBindViewHolder(holder: MemoListHolder, position: Int) {
-        memoList.let {
+        memoList?.let {
             holder.apply {
                 val entity = it[position]
                 card.apply {
-//                    setBackgroundColor(ContextCompat.getColor(context, randomColor()))
                     setBackgroundResource(randomColor())
                     setOnClickListener {
                         val dlg = AlertDialog.Builder(context)
@@ -98,11 +99,16 @@ class BasketListAdapter(private var context : Context) : RecyclerView.Adapter<Ba
     }
 
     private fun removeMemo(entity: BasketEntity, position: Int) {
-        memoList.removeAt(position)
-        MemoRoomDatabase.getInstance(context).getBasketDAO()
-            .deleteBasket(entity)
-        size = memoList.size
-        notifyDataSetChanged()
+        memoList?.let {
+            it.removeAt(position)
+            MemoRoomDatabase.getInstance(context).getBasketDAO()
+                .deleteBasket(entity)
+            size = it.size
+            notifyDataSetChanged()
+            if(size < 1) {
+                (context as MainActivity).updatePager(1)
+            }
+        }
     }
 
     private fun restoreMemo(entity: BasketEntity, position: Int) {
