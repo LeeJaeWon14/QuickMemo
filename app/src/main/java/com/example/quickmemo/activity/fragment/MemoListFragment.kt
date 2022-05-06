@@ -6,24 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quickmemo.activity.adapter.recycler.BasketListAdapter
 import com.example.quickmemo.activity.adapter.recycler.MemoListAdapter
-import com.example.quickmemo.activity.room.MemoRoomDatabase
-import com.example.quickmemo.activity.room.entity.BasketEntity
-import com.example.quickmemo.activity.room.entity.MemoEntity
-import com.example.quickmemo.activity.util.Logger
+import com.example.quickmemo.activity.viewmodel.MemoViewModel
 import com.example.quickmemo.databinding.FragmentMemoListBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MemoListFragment : Fragment() {
     private var _binding : FragmentMemoListBinding? = null
     private val binding get() = _binding!!
+    private val viewModel: MemoViewModel by activityViewModels()
     companion object {
         fun newInstance(page : Int) : MemoListFragment {
             val fragment = MemoListFragment()
@@ -47,6 +44,7 @@ class MemoListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         CoroutineScope(Dispatchers.Main).launch {
+            viewModel.isUnlock = true
             binding.rvMemoList.apply {
                 adapter = when(arguments?.getInt("page")) {
                     0 -> MemoListAdapter(requireContext())
@@ -77,6 +75,7 @@ class MemoListFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+//        viewModel.isUnlock = true
         _binding = null
     }
 }

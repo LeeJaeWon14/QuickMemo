@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
@@ -15,7 +16,9 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.quickmemo.R
 import com.example.quickmemo.activity.adapter.MemoPagerAdatper
 import com.example.quickmemo.activity.util.BiometricManager
+import com.example.quickmemo.activity.util.Logger
 import com.example.quickmemo.activity.util.Pref
+import com.example.quickmemo.activity.viewmodel.MemoViewModel
 import com.example.quickmemo.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -23,8 +26,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
     private val tabTitle = arrayOf("메모", "휴지통")
+    private val viewModel: MemoViewModel by viewModels()
     var isUnlock = false
-    private var isExit = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -33,10 +36,10 @@ class MainActivity : AppCompatActivity() {
 
         actionBar?.hide()
         setSupportActionBar(binding.toolbar)
-        bindingInit()
+        initUi()
     }
 
-    private fun bindingInit() {
+    private fun initUi() {
         binding.apply {
             toolbar.title = tabTitle[0]
             toolbar.setTitleTextColor(getColor(R.color.white))
@@ -92,18 +95,23 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        binding.viewPager.adapter = MemoPagerAdatper(this@MainActivity)
-        if(!isUnlock) {
-            binding.llLockScreen.isVisible = true
-            binding.rlContent.isVisible = false
-            checkPreference()
+        Logger.e(viewModel.isUnlock.toString())
+//        binding.viewPager.adapter = MemoPagerAdatper(this@MainActivity)
+        if(viewModel.isUnlock) {
+            Logger.e("isUnlock is true, actually ${viewModel.isUnlock}")
+            visibleLockScreen(false)
         }
         else {
-            // When move Activity
-            binding.llLockScreen.isVisible = false
-            binding.rlContent.isVisible = true
+            Logger.e("isUnlock is false, actually ${viewModel.isUnlock}")
+            visibleLockScreen(true)
+            checkPreference()
         }
-        isUnlock = false
+        viewModel.isUnlock = false
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Logger.e("onDestroy")
     }
 
     private var isFabOpened = false
@@ -129,7 +137,6 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this@MainActivity, "한번 더 누르면 종료합니다", Toast.LENGTH_SHORT).show()
         }
         else if(System.currentTimeMillis() - time < 2000) {
-            isExit = true
             this.finishAffinity()
         }
     }
@@ -142,7 +149,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.menu_option -> {
-                isUnlock = true
+                viewModel.isUnlock = true
                 startActivity(Intent(this@MainActivity, SettingActivity::class.java))
             }
         }
@@ -155,8 +162,7 @@ class MainActivity : AppCompatActivity() {
                 BiometricManager.getPrompt(this, object : BiometricPrompt.AuthenticationCallback() {
                     override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                         super.onAuthenticationSucceeded(result)
-                        binding.llLockScreen.isVisible = false
-                        binding.rlContent.isVisible = true
+                        visibleLockScreen(false)
                     }
 
                     override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
@@ -166,9 +172,15 @@ class MainActivity : AppCompatActivity() {
                 }).authenticate(BiometricManager.getPromptInfo())
             }
             else {
-                binding.llLockScreen.isVisible = false
-                binding.rlContent.isVisible = true
+                visibleLockScreen(false)
             }
+        }
+    }
+
+    private fun visibleLockScreen(visible: Boolean) {
+        binding.apply {
+            llLockScreen.isVisible = visible
+            rlContent.isVisible = !visible
         }
     }
 }

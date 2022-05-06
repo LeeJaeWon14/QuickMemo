@@ -1,6 +1,5 @@
 package com.example.quickmemo.activity.viewmodel
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class MemoViewModel : ViewModel() {
@@ -13,4 +12,6 @@ class MemoViewModel : ViewModel() {
             field = value
         }
         get() = field
+
+    var isUnlock: Boolean = false
 }
